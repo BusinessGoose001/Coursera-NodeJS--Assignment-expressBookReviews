@@ -48,17 +48,35 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     if (!("username") in req.body){
         res.status(400).json({"message": "please provide your username"})
     }
-  if (req.params.isbn in books){
-    let book = books[req.params.isbn]
-    
-    book["reviews"][req.body.username] = req.body.review
-  return res.status(200).json({message: "Review posted"});
-  }else{
-    
-    return res.status(400).json({"message": "isbn not found"})
-  }
+    if (req.params.isbn in books){
+        let book = books[req.params.isbn]
+        
+        book["reviews"][req.body.username] = req.body.review
+        return res.status(200).json({message: "Review posted"});
+    }else{
+        
+        return res.status(400).json({"message": "isbn not found"})
+    }
+});
+
+//Remove book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    if (!("username") in req.body){
+        res.status(400).json({"message": "please provide your username"})
+    }
+
+    if (req.params.isbn in books){
+        let book = books[req.params.isbn]
+        
+        delete book["reviews"][req.body.username];
+        return res.status(200).json({message: "Review deleted"});
+    }else{
+        
+        return res.status(400).json({"message": "isbn not found"})
+    }
 });
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
+module.exports.secret = secret;
